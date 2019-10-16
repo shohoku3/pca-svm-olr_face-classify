@@ -53,6 +53,8 @@ def PCA(data,r):
 	A=data-np.tile(data_mean,(rows,1)) #中心化
 	C=np.dot(A,A.T) #得到协方差矩阵 表征每两个元素之间的关联程度
 	D,V=np.linalg.eig(C) #求协方差矩阵的特征值和特征向量 ？为何不对特征值进行排序
+	print(D)
+	print(V)
 	V_r=V[:,0:r]#提取前r个最大特征值对应的特征向量
 	V_r=np.dot(A.T,V_r)
 	for i in range(r):
@@ -89,35 +91,41 @@ def face_rec(k,n_components):
 
 train_x,train_y,test_x,test_y=face_rec(6,40)
 
+
+### 推广 计算每两个数据之间的分类 并存成矩阵的形式
+###
+'''
+def calcsvmMatrix(svm,C,toler,maxIter,train_x,train_y):
+	svmMatrix=np.mat(np.zeros((40,40)))
+	for i in range(20):
+		for j in range(20):
+			if i==j:
+				continue
+			else:
+				train_x=np.concatenate(np.mat(train_x[i*6:i*6+6,:]),np.mat(train_x[j*6:j*6+6,:]),axis=0)
+				svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))  
+				svmMatrix[i,j]=svmClassifier
+				return svmMatrix
+
+svmMatrix=calcsvmMatrix(svm,0.6,0.001,50,train_x,train_y)
+#print(svmMatrix.shape)
+'''
 ## step 2 training ...
-print(int(train_x.shape[0]/12))
-for i in range(int(train_x.shape[0]/12)):
-	print('')
-	train_x=train_x[i*12:(i+12)*12,:]
-	train_y=train_y[i*12:(i+12)*12]
-#train_x=train_x[0:12,:]
-#train_y=train_y[0:12]
+# 计算alpha 1,alpha 2
+
+train_x=train_x[0:12,:]
+train_y=train_y[0:12]
 test_x=test_x[0:8,:]
 test_y=test_y[0:8]
 print ("step 2: training..." ) 
 C = 0.6  
 toler = 0.001  
 maxIter = 50  
-svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))  
+svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))
+
 #print(svmClassifier.alphas)
 #print(svmClassifier.KernelMat)
 #print(svmClassifier.b)
-## step 2: training...  
-'''
-print ("step 2: training..." ) 
-C = 0.6  
-toler = 0.001  
-maxIter = 50  
-svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))  
-'''
 print('step 3: testing')
 accuracy=svm.testSVM(svmClassifier, test_x, test_y)
 print ('The classify accuracy is: %.3f%%' % (accuracy * 100) ) 
-
-### 推广 计算每两个数据之间的分类
-### 
