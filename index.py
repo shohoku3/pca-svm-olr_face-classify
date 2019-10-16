@@ -99,6 +99,7 @@ def calcsvmMatrix(svm,C,toler,maxIter,train_x,train_y):
 				print(train_x_new.shape)
 				print(train_y_new.shape)
 				svmClassifier = svm.trainSVM(train_x_new, train_y_new, C, toler, maxIter, kernelOption = ('linear', 0))  
+				svmMatrix[i,j]=svmClassifier
 	return svmMatrix
 
 calcsvmMatrix(svm,0.6,0.001,50,train_x,train_y)
