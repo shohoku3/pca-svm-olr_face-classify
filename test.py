@@ -84,21 +84,23 @@ def face_rec(k,n_components):
 
 train_x,train_y,test_x,test_y=face_rec(6,40)
 
-### 推广 计算每两个数据之间的分类 并存成矩阵的形式
-###
-def calcsvmMatrix(svm,C,toler,maxIter,train_x,train_y):
-	svmMatrix=np.mat(np.zeros((40,40)))
-	for i in range(20):
-		for j in range(20):
-			if i==j:
-				continue
-			else:
-				#print(i,j)
-				train_x=np.vstack((train_x[i*6:i*6+6,:],train_x[j*6:j*6+6,:]))
-				train_y=np.hstack((train_y[i*6:i*6+6],train_y[j*6:j*6+6]))
-				print(train_x.shape)
-				print(train_y.shape)
-				svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))  
-	return svmMatrix
 
-calcsvmMatrix(svm,0.6,0.001,50,train_x,train_y)
+#print(svmMatrix.shape)
+## step 2 training ...
+# 计算alpha 1,alpha 2
+train_x=train_x[0:12,:]
+train_y=train_y[0:12]
+test_x=test_x[0:8,:]
+test_y=test_y[0:8]
+print ("step 2: training..." ) 
+C = 0.6  
+toler = 0.001  
+maxIter = 50  
+svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))
+#print(svmClassifier.alphas)
+#print(svmClassifier.KernelMat)
+#print(svmClassifier.b)
+
+print('step 3: testing')
+accuracy=svm.testSVM(svmClassifier, test_x, test_y)
+print ('The classify accuracy is: %.3f%%' % (accuracy * 100) ) 

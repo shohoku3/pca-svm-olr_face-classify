@@ -271,8 +271,10 @@ def testSVM(svm,test_x,test_y):
 	for i in range(numTestSamples):  
 		kernelValue = calcKernelValue(supportVectors, test_x[i, :], svm.KernelOption)  
 		predict = kernelValue.T * np.multiply(supportVectorLabels, supportVectorAlphas) + svm.b  
+		print('predict:',predict)
 		if np.sign(predict) == np.sign(test_y.T[i]):  
 			matchCount += 1  
+	print(matchCount)
 	accuracy = float(matchCount) / numTestSamples  
 	return accuracy  
 
