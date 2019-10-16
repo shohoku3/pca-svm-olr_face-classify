@@ -88,17 +88,17 @@ train_x,train_y,test_x,test_y=face_rec(6,40)
 ###
 def calcsvmMatrix(svm,C,toler,maxIter,train_x,train_y):
 	svmMatrix=np.mat(np.zeros((40,40)))
-	for i in range(20):
-		for j in range(20):
+	for i in range(40):
+		for j in range(40):
 			if i==j:
 				continue
 			else:
 				#print(i,j)
-				train_x=np.vstack((train_x[i*6:i*6+6,:],train_x[j*6:j*6+6,:]))
-				train_y=np.hstack((train_y[i*6:i*6+6],train_y[j*6:j*6+6]))
-				print(train_x.shape)
-				print(train_y.shape)
-				svmClassifier = svm.trainSVM(train_x, train_y, C, toler, maxIter, kernelOption = ('linear', 0))  
+				train_x_new=np.vstack((train_x[i*6:i*6+6,:],train_x[j*6:j*6+6,:]))
+				train_y_new=np.hstack((train_y[i*6:i*6+6],train_y[j*6:j*6+6]))
+				print(train_x_new.shape)
+				print(train_y_new.shape)
+				svmClassifier = svm.trainSVM(train_x_new, train_y_new, C, toler, maxIter, kernelOption = ('linear', 0))  
 	return svmMatrix
 
 calcsvmMatrix(svm,0.6,0.001,50,train_x,train_y)
