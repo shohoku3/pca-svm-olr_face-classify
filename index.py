@@ -68,6 +68,9 @@ def face_rec(k,n_components):
 
 	#使用PCA进行降维
 	final_data,data_mean,V_r=PCA(train_face,n_components)
+	#final_data
+	#preview=Image.fromarray(final_data[0,:])
+	#preview.show()
 	#训练脸总数
 	num_train = final_data.shape[0]
 	#测试脸总数
@@ -76,14 +79,12 @@ def face_rec(k,n_components):
 	temp_face = test_face - np.tile(data_mean,(num_test,1))
 	#得到测试脸在特征向量下的数据
 	data_test_new = np.dot(temp_face,V_r) 
-
-	data_test_new = np.array(data_test_new) # mat change to array
+	data_test_new = np.array(data_test_new) 
 	data_train_new = np.array(final_data)
 
 	return data_train_new,train_label,data_test_new,test_label
 
 train_x,train_y,test_x,test_y=face_rec(6,40)
-
 ### 推广 计算每两个数据之间的分类 并存成矩阵的形式
 ###
 def calcsvmMatrix(svm,C,toler,maxIter,train_x,train_y):
@@ -96,10 +97,10 @@ def calcsvmMatrix(svm,C,toler,maxIter,train_x,train_y):
 				#print(i,j)
 				train_x_new=np.vstack((train_x[i*6:i*6+6,:],train_x[j*6:j*6+6,:]))
 				train_y_new=np.hstack((train_y[i*6:i*6+6],train_y[j*6:j*6+6]))
-				print(train_x_new.shape)
-				print(train_y_new.shape)
 				svmClassifier = svm.trainSVM(train_x_new, train_y_new, C, toler, maxIter, kernelOption = ('linear', 0))  
-				svmMatrix[i,j]=svmClassifier
+				print(svmClassifier.b)
+				print(svmClassifier.alphas)
+				#svmMatrix[i,j]=svmClassifier
 	return svmMatrix
 
 calcsvmMatrix(svm,0.6,0.001,50,train_x,train_y)

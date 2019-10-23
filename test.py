@@ -68,6 +68,7 @@ def face_rec(k,n_components):
 
 	#使用PCA进行降维
 	final_data,data_mean,V_r=PCA(train_face,n_components)
+	print(final_data.shape)
 	#训练脸总数
 	num_train = final_data.shape[0]
 	#测试脸总数
